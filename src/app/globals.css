@@ -1,26 +1,252 @@
-@import "tailwindcss";
+/* ================================
+   EternaKeys — Global Styles (Reset + Theme + Navbar)
+   Replace your entire app/globals.css with this file.
+   ================================ */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* --- 1) Reset / Normalize --- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+html:focus-within { scroll-behavior: smooth; }
+html, body { height: 100%; }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+img, picture, video, canvas, svg { display: block; max-width: 100%; }
+input, button, textarea, select { font: inherit; }
+a { color: inherit; text-decoration: none; }
+button { border: 0; background: none; cursor: pointer; }
+ul[role='list'], ol[role='list'] { list-style: none; }
+
+/* --- 2) Theme Tokens (Luxury Dark) --- */
+:root {
+  /* Brand */
+  --ek-brand: #2bd07f;         /* accent emerald */
+  --ek-brand-2: #60d7c3;       /* secondary aqua */
+
+  /* Surface */
+  --ek-bg: #0b0f0e;            /* app background */
+  --ek-surface: #0f1412;       /* card/nav surface */
+  --ek-elev-1: #111614;
+  --ek-elev-2: #151b19;
+
+  /* Text */
+  --ek-text: #e6efe8;          /* primary text */
+  --ek-text-dim: #c2cec6;      /* secondary text */
+  --ek-text-muted: #97a59d;    /* tertiary text */
+
+  /* Borders / Lines */
+  --ek-line: rgba(255,255,255,0.08);
+  --ek-line-soft: rgba(255,255,255,0.06);
+
+  /* States */
+  --ek-hover: rgba(255,255,255,0.06);
+  --ek-focus: 0 0 0 2px rgba(43,208,127,0.35);
+  --ek-shadow: 0 8px 24px rgba(0,0,0,0.3);
+
+  /* Sizing / Radius */
+  --ek-radius: 12px;
+  --ek-radius-lg: 16px;
+  --ek-pad: 12px;
+  --ek-gap: 12px;
+
+  /* Typography */
+  --ek-font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --ek-code: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Navbar */
+  --ek-nav-height: 56px;
+  --ek-nav-maxw: 1280px; /* bump to 1440 or 1600 if you want more room */
+}
+
+/* --- 3) Base Layout --- */
+body {
+  background: var(--ek-bg);
+  color: var(--ek-text);
+  font-family: var(--ek-font);
+  font-size: 16px;
+}
+main {
+  min-height: calc(100dvh - var(--ek-nav-height));
+  padding: 20px 16px;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* --- 4) Typography Helpers --- */
+.h1 { font-size: 2rem; font-weight: 800; letter-spacing: 0.2px; }
+.h2 { font-size: 1.5rem; font-weight: 700; }
+.h3 { font-size: 1.25rem; font-weight: 700; }
+.muted { color: var(--ek-text-muted); }
+
+/* --- 5) Card / Panel --- */
+.card {
+  background: var(--ek-surface);
+  border: 1px solid var(--ek-line);
+  border-radius: var(--ek-radius);
+  padding: 16px;
+  box-shadow: var(--ek-shadow);
+}
+
+/* --- 6) Buttons --- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--ek-elev-2);
+  color: var(--ek-text);
+  border: 1px solid var(--ek-line);
+  transition: background 120ms ease, border-color 120ms ease, transform 60ms ease;
+}
+.btn:hover { background: var(--ek-hover); }
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  background: var(--ek-brand);
+  color: #0b120f;
+  border-color: transparent;
+}
+.btn-primary:hover { filter: brightness(1.05); }
+
+/* --- 7) Inputs --- */
+.input, .select, .textarea {
+  width: 100%;
+  background: var(--ek-elev-1);
+  color: var(--ek-text);
+  border: 1px solid var(--ek-line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+}
+.input:focus, .select:focus, .textarea:focus {
+  box-shadow: var(--ek-focus);
+  border-color: rgba(43,208,127,0.3);
+}
+
+/* --- 8) Details Dropdown (used by "More" menu) --- */
+details {
+  position: relative;
+}
+summary { list-style: none; }
+summary::-webkit-details-marker { display: none; }
+
+/* --- 9) Focus Ring Utility --- */
+:where(a, button, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: var(--ek-focus);
+  border-radius: 10px;
+}
+
+/* --- 10) Scrollbar (nice on dark) --- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+*::-webkit-scrollbar { height: 10px; width: 10px; }
+*::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 20px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* =========================================
+   NAVBAR (auto-overflow -> "More" menu)
+   ========================================= */
+.ek-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--ek-nav-height);
+  background: var(--ek-surface);
+  color: var(--ek-text);
+  border-bottom: 1px solid var(--ek-line-soft);
+  backdrop-filter: saturate(1.1) blur(6px);
+}
+.ek-nav-inner {
+  max-width: var(--ek-nav-maxw);
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+}
+.ek-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+}
+.ek-brand-mark { font-size: 18px; }
+.ek-brand-text { font-size: 16px; font-weight: 800; letter-spacing: 0.2px; }
+
+.ek-nav-wrap { overflow: hidden; }
+.ek-nav-list {
+  display: flex; align-items: center;
+  gap: 12px;
+  list-style: none; padding: 0; margin: 0;
+  white-space: nowrap;
+}
+.ek-item, .ek-item-more { flex: 0 0 auto; }
+.ek-link {
+  display: inline-block;
+  padding: 8px 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  color: #d9e6db;
+  border-radius: 8px;
+  transition: background 120ms ease, color 120ms ease;
+}
+.ek-link:hover { background: var(--ek-hover); color: #fff; }
+
+/* More menu */
+.ek-more { position: relative; }
+.ek-more-btn {
+  display: inline-block;
+  padding: 8px 10px;
+  font-size: 13.5px;
+  font-weight: 800;
+  border-radius: 8px;
+  user-select: none;
+}
+.ek-more[open] .ek-more-btn,
+.ek-more-btn:hover { background: var(--ek-hover); }
+
+.ek-more-menu {
+  position: absolute;
+  right: 0;
+  margin-top: 8px;
+  background: #111614;
+  border: 1px solid var(--ek-line);
+  border-radius: 10px;
+  padding: 6px;
+  min-width: 200px;
+  box-shadow: var(--ek-shadow);
+}
+.ek-more-menu > li { list-style: none; }
+.ek-more-link {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: #d9e6db;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.ek-more-link:hover { background: var(--ek-hover); color: #fff; }
+
+/* --- 11) Responsive Tweaks --- */
+@media (max-width: 1100px) {
+  :root { --ek-nav-maxw: 100%; }
+}
+@media (max-width: 900px) {
+  .ek-brand-text { display: none; }
+  .ek-nav-list { gap: 8px; }
+  .ek-link, .ek-more-btn { padding: 8px 8px; font-size: 13px; }
 }
